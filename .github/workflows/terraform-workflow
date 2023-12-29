@@ -1,0 +1,37 @@
+name: Terraform Deployment
+
+on:
+  push:
+    branches:
+      - main  # Change to the appropriate branch name
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 0.14.7  # Change to the desired Terraform version
+
+    - name: Initialize Terraform
+      run: terraform init
+
+    - name: Validate Terraform
+      run: terraform validate
+
+    - name: Plan Terraform
+      run: terraform plan -out=tfplan
+
+    - name: Apply Terraform
+      run: terraform apply -auto-approve tfplan
+      # You may want to restrict this step to certain conditions, like a manual approval, depending on your requirements
+
+    # Add additional steps as needed for your specific deployment process
+
+    - name: Clean up Terraform plan
+      run: rm -f tfplan
